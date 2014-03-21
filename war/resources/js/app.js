@@ -1,0 +1,2 @@
+var hotelsapp = angular.module('EanHotelsSearchApp', ['ui.bootstrap', 'chieffancypants.loadingBar', 'ngAnimate', 'toaster'])
+				 .config(function(cfpLoadingBarProvider) {cfpLoadingBarProvider.includeSpinner = true;});
