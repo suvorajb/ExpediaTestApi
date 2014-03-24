@@ -20,13 +20,19 @@ public class CmnUtil {
 	
 	public final static String _VIEW_HOTELS_SRCH = "hotelsearch";
 	
-	private final static String _EAN_API_KEYS = "apiKey=ayevrmvcukc2hf76tb9b2sma&cid=454871";
-	private final static String _EAN_SEARCH_URL = "http://api.ean.com/ean-services/rs/hotel/v3/list?minorRev=11&locale=en_US&numberOfResults=50&searchRadius=100&supplierCacheTolerance=MED_ENHANCED";
-
-	public static HttpResponse invokeUrl(String url_params)
-			throws IOException, MalformedURLException, Exception {
-
-		StringBuilder url_to_invk = new StringBuilder(_EAN_SEARCH_URL);
+	private final static String _EAN_API_KEYS 		= "apiKey=ayevrmvcukc2hf76tb9b2sma&cid=454871";
+	private final static String _EAN_SEARCH_URL 	= "http://api.ean.com/ean-services/rs/hotel/v3/list?minorRev=26&locale=en_US&numberOfResults=50&searchRadius=100&supplierCacheTolerance=MED_ENHANCED";
+	private final static String _EAN_HOTEL_INFO_URL = "http://api.ean.com/ean-services/rs/hotel/v3/info?minorRev=26&locale=en_US";
+	
+	public static HttpResponse invokeUrl(String url_params, int invkType) throws IOException, MalformedURLException, Exception {
+		
+		StringBuilder url_to_invk = null;
+		
+		switch(invkType) {
+			case 1: url_to_invk = new StringBuilder(_EAN_SEARCH_URL); 
+					break;
+			case 2: url_to_invk = new StringBuilder(_EAN_HOTEL_INFO_URL);
+		}
 		
 		url_to_invk.append("&")
 				   .append(_EAN_API_KEYS)
@@ -43,9 +49,14 @@ public class CmnUtil {
 		return httpRspnse;
 	}
 
-	public static HotelResults parseEANResponse(HttpResponse response,	Gson gson) throws IOException {
+	public static HotelResults parseEANResponseForHotelsList(HttpResponse response,	Gson gson) throws IOException {
 		return gson.fromJson(new InputStreamReader(response.getContent()),
 				HotelResults.class);
+	}
+	
+	public static HotelInfoResult parseEANResponseForHotelDetailsInfo(HttpResponse response, Gson gson) throws IOException {
+		return gson.fromJson(new InputStreamReader(response.getContent()),
+				HotelInfoResult.class);
 	}
 	
 	public static SearchParam parseSearchJsonData(String jsonStr, Gson gson) throws IOException {

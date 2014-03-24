@@ -1,15 +1,18 @@
 package com.apps.ean.hotels;
 
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 import java.util.logging.Logger;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
@@ -66,4 +69,20 @@ public class HotelController {
 
 		return gson.toJson(hotels);
 	}
+	
+	
+	// used by angularjs to make Ajax call to get the Hotels list based on the search
+	@RequestMapping(value = "/ExpediaApp/gethotelinfo", method = RequestMethod.GET, produces = "application/json")
+	public @ResponseBody String getHotelInfoJson(@RequestParam final int hotelid) {
+		Gson gson = CmnUtil.getGson(new Gson());
+		HotelBO hotelinfo = new HotelBO();
+
+		logger.info("**** hotelid sent-" + hotelid);
+		
+		hotelinfo = hotelSvc.getHotelInfo(hotelid);
+
+		logger.info("**** hotel info-" + hotelinfo);
+
+		return gson.toJson(hotelinfo);
+	}	
 }

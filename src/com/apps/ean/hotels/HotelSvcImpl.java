@@ -1,13 +1,16 @@
 package com.apps.ean.hotels;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import com.apps.ean.hotels.HotelListResponse.HotelSummary;
+import com.apps.ean.hotels.HotelInformationResponse.HotelDetails;
+import com.apps.ean.hotels.HotelInformationResponse.HotelImages.HotelImage;
 import com.google.api.client.http.HttpResponse;
 import com.google.gson.Gson;
 
@@ -36,7 +39,7 @@ public class HotelSvcImpl implements HotelSvc{
 			ean_params.append("city=New%20York");
 		}else {
 			ean_params.append("city=")
-					  .append(cityname);
+					  .append(StringEscapeUtils.escapeHtml4(cityname));
 		}
 		
 		if(StringUtils.isNotBlank(statecode)) {
@@ -57,18 +60,18 @@ public class HotelSvcImpl implements HotelSvc{
 		
 		try{
 			gsnObj = CmnUtil.getGson(gsnObj);
-			HttpResponse httpResponse = CmnUtil.invokeUrl(ean_params.toString());
-			HotelResults results = CmnUtil.parseEANResponse(httpResponse, gsnObj);
+			HttpResponse httpResponse = CmnUtil.invokeUrl(ean_params.toString(), 1);
+			HotelResults results = CmnUtil.parseEANResponseForHotelsList(httpResponse, gsnObj);
 			
 			logger.info("**** results from EAN service-" + results);
 			
 			if(results !=null) {
-				List<HotelSummary> ean_hotel_list = results.getHotelListResponse().getHotelList().getHotelSummary();
+				List<com.apps.ean.hotels.HotelListResponse.HotelSummary> ean_hotel_list = results.getHotelListResponse().getHotelList().getHotelSummary();
 				
 				if(ean_hotel_list!=null && ean_hotel_list.size()>0) {
 					logger.info("**** ean_hotel_list size -" + ean_hotel_list.size());
 					
-					for(HotelSummary hoteldata : ean_hotel_list) {
+					for(com.apps.ean.hotels.HotelListResponse.HotelSummary hoteldata : ean_hotel_list) {
 						
 						HotelBO hotelbo = new HotelBO();
 						hotelbo.setHotel_name(hoteldata.getName());
@@ -100,6 +103,70 @@ public class HotelSvcImpl implements HotelSvc{
 			logger.severe("Error Occurred while searching for hotels using Expedia Service:: " + ex.getMessage());
 		}
 		return hotellist;
+	}
+
+	
+	
+	@Override
+	public HotelBO getHotelInfo(int hotelid) {
+		Gson gsnObj = null;
+		HotelBO hotelbo = new HotelBO();
+		
+		try{
+			gsnObj = CmnUtil.getGson(gsnObj);
+			HttpResponse httpResponse = CmnUtil.invokeUrl("&hotelId="+String.valueOf(hotelid).toString(), 2);
+			HotelInfoResult result = CmnUtil.parseEANResponseForHotelDetailsInfo(httpResponse, gsnObj);
+			if(result!=null) {
+				com.apps.ean.hotels.HotelInformationResponse.HotelSummary hotelsumm = result.getHotelInformationResponse().getHotelSummary();
+				
+				hotelbo.setHotel_name(hotelsumm.getName());
+				
+				String addrss = hotelsumm.getAddress1() + ", "
+								+ hotelsumm.getCity() + ", "
+								+ hotelsumm.getCountryCode() + ", " 
+								+ hotelsumm.getPostalCode();
+				hotelbo.setHotel_address(addrss);
+				
+				//populate generic hotel information
+				hotelbo.setHotel_booking_currency(hotelsumm.getRateCurrencyCode());
+				hotelbo.setHotel_booking_path(hotelsumm.getDeepLink());
+				hotelbo.setHotel_booking_rate_high(hotelsumm.getHighRate());
+				hotelbo.setHotel_booking_rate_low(hotelsumm.getLowRate());
+				hotelbo.setHotel_location_mark(hotelsumm.getLocationDescription());
+				hotelbo.setHotel_tripadvisor_rating_url(hotelsumm.getTripAdvisorRatingUrl());
+				hotelbo.setHotel_serial_no(Integer.valueOf(hotelsumm.getHotelId()));
+				
+				// populate details data
+				HotelDetails hoteldtls = result.getHotelInformationResponse().getHotelDetails();
+				hotelbo.setHotel_number_rooms(hoteldtls.getNumberOfRooms());
+				hotelbo.setHotel_check_in_time(hoteldtls.getCheckInTime());
+				hotelbo.setHotel_check_out_time(hoteldtls.getCheckOutTime());
+				hotelbo.setHotel_property_information(hoteldtls.getPropertyInformation());
+				hotelbo.setHotel_policy(hoteldtls.getHotelPolicy());
+				hotelbo.setHotel_room_information(hoteldtls.getPropertyInformation());
+				hotelbo.setHotel_driving_directions(hoteldtls.getDrivingDirections());
+				
+				// populate the hotel images
+				List<String> hotelimgslist = Collections.emptyList();
+				
+				if(result.getHotelInformationResponse().getHotelImages()!=null) {
+					List<HotelImage> hotelimgs = result.getHotelInformationResponse().getHotelImages().getHotelImage();
+					
+					for(HotelImage img : hotelimgs) {
+						String imgUrl = img.getUrl();
+						hotelimgslist.add(imgUrl);
+					}
+				}
+				hotelbo.setHotel_images(hotelimgslist);
+				
+			}
+			
+		}catch(Exception ex) {
+			logger.severe("Error Occurred while the hotel details information using Expedia Service:: " + ex.getMessage() + " hotelid-"+hotelid);
+		}
+		
+		
+		return hotelbo;
 	}
 
 }

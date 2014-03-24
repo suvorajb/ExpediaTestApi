@@ -8,8 +8,11 @@ public interface HotelSvc {
 	public List<HotelBO> searchHotels(String cityname, String countrycode, 
 								String checkindate, String checkoutdate, int roomcount);
 
-	// search by city, statecode, country code
+	// search by city, state code, country code
 	public List<HotelBO> searchHotels(String cityname, String statecode,
 								String countrycode, String checkindate, String checkoutdate, int roomcount);
+	
+	// get hotel details information
+	public HotelBO getHotelInfo(int hotelid);
 
 }

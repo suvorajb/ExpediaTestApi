@@ -1,5 +1,7 @@
 package com.apps.ean.hotels;
 
+import java.util.List;
+
 public class HotelBO {
 	
 	private int hotel_serial_no;
@@ -15,6 +17,17 @@ public class HotelBO {
 	private String hotel_img_thumb;
 	private String hotel_img_medium;
 	
+	// hotel details information
+	private int hotel_number_rooms;
+	private String hotel_check_in_time; 
+	private String hotel_check_out_time;
+	private String hotel_property_information;
+	private String hotel_policy;
+	private String hotel_room_information;
+	private String hotel_driving_directions;
+	private List<String> hotel_images;
+	
+		
 	public int getHotel_serial_no() {
 		return hotel_serial_no;
 	}
@@ -86,5 +99,53 @@ public class HotelBO {
 	}
 	public void setHotel_img_medium(String hotel_img_medium) {
 		this.hotel_img_medium = hotel_img_medium;
+	}
+	public int getHotel_number_rooms() {
+		return hotel_number_rooms;
+	}
+	public void setHotel_number_rooms(int hotel_number_rooms) {
+		this.hotel_number_rooms = hotel_number_rooms;
+	}
+	public String getHotel_check_in_time() {
+		return hotel_check_in_time;
+	}
+	public void setHotel_check_in_time(String hotel_check_in_time) {
+		this.hotel_check_in_time = hotel_check_in_time;
+	}
+	public String getHotel_check_out_time() {
+		return hotel_check_out_time;
+	}
+	public void setHotel_check_out_time(String hotel_check_out_time) {
+		this.hotel_check_out_time = hotel_check_out_time;
+	}
+	public String getHotel_property_information() {
+		return hotel_property_information;
+	}
+	public void setHotel_property_information(String hotel_property_information) {
+		this.hotel_property_information = hotel_property_information;
+	}
+	public String getHotel_policy() {
+		return hotel_policy;
+	}
+	public void setHotel_policy(String hotel_policy) {
+		this.hotel_policy = hotel_policy;
+	}
+	public String getHotel_room_information() {
+		return hotel_room_information;
+	}
+	public void setHotel_room_information(String hotel_room_information) {
+		this.hotel_room_information = hotel_room_information;
+	}
+	public String getHotel_driving_directions() {
+		return hotel_driving_directions;
+	}
+	public void setHotel_driving_directions(String hotel_driving_directions) {
+		this.hotel_driving_directions = hotel_driving_directions;
+	}
+	public List<String> getHotel_images() {
+		return hotel_images;
+	}
+	public void setHotel_images(List<String> hotel_images) {
+		this.hotel_images = hotel_images;
 	}
 }
