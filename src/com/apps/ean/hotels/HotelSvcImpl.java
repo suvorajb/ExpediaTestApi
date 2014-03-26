@@ -117,6 +117,7 @@ public class HotelSvcImpl implements HotelSvc{
 			HttpResponse httpResponse = CmnUtil.invokeUrl("&hotelId="+String.valueOf(hotelid).toString(), 2);
 			HotelInfoResult result = CmnUtil.parseEANResponseForHotelDetailsInfo(httpResponse, gsnObj);
 			if(result!=null) {
+				//System.out.println("result.getHotelInformationResponse()-" + result.getHotelInformationResponse());
 				com.apps.ean.hotels.HotelInformationResponse.HotelSummary hotelsumm = result.getHotelInformationResponse().getHotelSummary();
 				
 				hotelbo.setHotel_name(hotelsumm.getName());
@@ -147,22 +148,24 @@ public class HotelSvcImpl implements HotelSvc{
 				hotelbo.setHotel_driving_directions(hoteldtls.getDrivingDirections());
 				
 				// populate the hotel images
-				List<String> hotelimgslist = Collections.emptyList();
+				List<String> hotelimgslist = new ArrayList<String>();
+				//System.out.println("result.getHotelInformationResponse().getHotelImages()-" + result.getHotelInformationResponse().getHotelImages());
 				
 				if(result.getHotelInformationResponse().getHotelImages()!=null) {
 					List<HotelImage> hotelimgs = result.getHotelInformationResponse().getHotelImages().getHotelImage();
+					//System.out.println("img list - " + hotelimgs.size());
 					
 					for(HotelImage img : hotelimgs) {
-						String imgUrl = img.getUrl();
-						hotelimgslist.add(imgUrl);
+						hotelimgslist.add(img.getUrl());
 					}
 				}
+				
 				hotelbo.setHotel_images(hotelimgslist);
 				
 			}
 			
 		}catch(Exception ex) {
-			logger.severe("Error Occurred while the hotel details information using Expedia Service:: " + ex.getMessage() + " hotelid-"+hotelid);
+			logger.severe("Error Occurred while the hotel details information using Expedia Service:: " + ex + " hotelid-"+hotelid);
 		}
 		
 		

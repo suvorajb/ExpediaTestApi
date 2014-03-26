@@ -1,4 +1,4 @@
-hotelsapp.controller('hotelsSrchController', ['$scope', '$http', 'toaster', function ($scope, $http, toaster)  {
+hotelsapp.controller('hotelsSrchController', ['$scope', '$http', 'toaster', '$modal', function ($scope, $http, toaster, $modal)  {
 	// for date picker used in checkin and checkout fields
 	$scope.format = 'MM/dd/yyyy';
 	
@@ -25,7 +25,7 @@ hotelsapp.controller('hotelsSrchController', ['$scope', '$http', 'toaster', func
 	        headers : { 'Accept': 'application/json', 'Content-Type': 'application/json' }
 		})
 		.success(function (results, status, headers, config) {
-			console.log(JSON.stringify(results))
+			//console.log(JSON.stringify(results))
 			$scope.hotelslist = results;
 			toaster.pop('success', 
 						"Hotels List load successful Notification", 
@@ -35,5 +35,19 @@ hotelsapp.controller('hotelsSrchController', ['$scope', '$http', 'toaster', func
 		
 	};
 	
-
+	$scope.viewHotelDtls = function(hotelid) {
+		try{
+			var modalInstance = $modal.open({
+				templateUrl: 'hotelDtls.htm',
+				controller: hotelDtlsController,
+				resolve: {
+					hotelid: function () {
+					  return hotelid;
+					}
+				}
+			});
+		}catch(err) {alert(err.message);}
+		
+	};
+	
 }]);

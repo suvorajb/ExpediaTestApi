@@ -1,5 +1,6 @@
 package com.apps.ean.hotels;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -55,8 +56,9 @@ public class CmnUtil {
 	}
 	
 	public static HotelInfoResult parseEANResponseForHotelDetailsInfo(HttpResponse response, Gson gson) throws IOException {
-		return gson.fromJson(new InputStreamReader(response.getContent()),
-				HotelInfoResult.class);
+		InputStreamReader in = new InputStreamReader(response.getContent());
+		//getEanReasultContent(in);
+		return gson.fromJson(in, HotelInfoResult.class);
 	}
 	
 	public static SearchParam parseSearchJsonData(String jsonStr, Gson gson) throws IOException {
@@ -69,5 +71,23 @@ public class CmnUtil {
 		gson = gb.create();
 
 		return gson;
+	}
+	
+	public static void getEanReasultContent(InputStreamReader in) {
+		try {	
+			BufferedReader reader = new BufferedReader(in);
+	        StringBuilder out = new StringBuilder();
+	        String line;
+	        while ((line = reader.readLine()) != null) {
+	            out.append(line);
+	        }
+	        
+	        System.out.println(out.toString());   //Prints the string content read from input stream
+       
+			reader.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

@@ -79,7 +79,7 @@
 			                            <p>{{hotel.hotel_serial_no}}</p>
 			                        </div>
 			                        <div class="col-xs-10 col-md-11">
-			                            <a href="" ng-click="showVenuePhotos(hotel.hotel_serial_no)"><h2 class="venueName">{{hotel.hotel_name}}</h2></a>
+			                            <a href="" ng-click="viewHotelDtls(hotel.hotel_serial_no)"><h2 class="venueName">{{hotel.hotel_name}}</h2></a>
 			                        </div>
 			                    </div>
 			                    <div class="row">
@@ -94,7 +94,7 @@
 			                            </p>
 			                            <p class="pull-right"> 
 			                            	<a href="{{hotel.hotel_booking_path}}" class="btn btn-success" target="_blank">Book Now</a>&nbsp;
-			                            	<a href="" class="btn btn-warning">View More</a>
+			                            	<a href="" ng-click="viewHotelDtls(hotel.hotel_serial_no)" class="btn btn-warning">View More</a>
 			                            </p>
 			                        </div>
 
@@ -106,12 +106,39 @@
 
 			    </form>
 			</div>
-	        	    
+	        
+	        
+	    <!--  hotel details modal -->
+		<div>
+    		<script type="text/ng-template" id="hotelDtls.htm">
+        		<div class="modal-header">
+            		<h3>{{hoteldata.hotel_name}}</h3>
+        		</div>
+        		<div class="modal-body">
+            		<address> {{hoteldata.hotel_address}} | {{hoteldata.hotel_location_mark}}</address>
+					<div class="row">
+						<h4>Hotel Policy</h4>
+						<small>{{hoteldata.hotel_policy}}</small>
+					</div>
+					<div class="row">
+            			<div data-ng-repeat="photo in hoteldata.hotel_images">
+                			<div class="col-md-6">
+                    			<img data-ng-src="{{photo}}" class="img-thumbnail" />
+                			</div>
+            			</div>
+        			</div>
+
+        		</div>
+        		<div class="modal-footer">
+            		<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        		</div>
+    		</script>
+		</div>	        
+        
         </section>
-        
-        <hr />
-        
+                
     </div>
+    
 
     <!-- 3rd party libraries -->
    
@@ -127,8 +154,7 @@
 
     <!-- Load controllers -->
     <script src="/resources/js/controllers/hotelsSrchController.js"></script>
-
-
+    <script src="/resources/js/controllers/hotelDtlsController.js"></script>
 
 </body>
 </html>

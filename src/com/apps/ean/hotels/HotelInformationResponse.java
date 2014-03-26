@@ -5,11 +5,11 @@ import java.util.List;
 
 public class HotelInformationResponse {
 	
-	private HotelSummary hotelSummary;
+	private HotelSummary HotelSummary;
 	
-	private HotelDetails hotelDetails;
+	private HotelDetails HotelDetails;
 	
-	private HotelImages hotelImages;
+	private HotelImages HotelImages;
 	
 	public static class HotelSummary {
 
@@ -95,6 +95,7 @@ public class HotelInformationResponse {
 		private String hotelPolicy;
 		private String roomInformation;
 		private String drivingDirections;
+		
 		public int getNumberOfRooms() {
 			return numberOfRooms;
 		}
@@ -134,24 +135,25 @@ public class HotelInformationResponse {
 			public String getUrl() {
 				return url;
 			}
-
-			public void setUrl(String url) {
-				this.url = url;
+			
+			@Override
+			public String toString() {
+				return this.url;
 			}
 		}
 	}
 	
 	// main getter setters
 	public HotelSummary getHotelSummary() {
-		return hotelSummary;
+		return HotelSummary;
 	}
 
 	public HotelDetails getHotelDetails() {
-		return hotelDetails;
+		return HotelDetails;
 	}
 
 	public HotelImages getHotelImages() {
-		return hotelImages;
+		return HotelImages;
 	}
 
 }
